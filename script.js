@@ -1,0 +1,34 @@
+// Central de Utilidades — Entregas 1 e 2
+// Entrega 1: fundamentos, funções, condicionais, for e do...while.
+function lerNumero(mensagem){const entrada=prompt(mensagem);if(entrada===null||entrada.trim()==="")return null;return Number(entrada.replace(",","."));}
+function moeda(valor){return valor.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});}
+function calcularDesconto(preco,percentual){return preco-(preco*percentual/100);}
+function calculadoraDescontos(){const preco=lerNumero("Preço original (R$):");if(preco===null)return;const desconto=lerNumero("Desconto (%):");if(desconto===null)return;if(!Number.isFinite(preco)||preco<=0||!Number.isFinite(desconto)||desconto<0||desconto>100){alert("Informe preço positivo e desconto entre 0 e 100%.");return;}const final=calcularDesconto(preco,desconto);alert("CALCULADORA DE DESCONTOS\nPreço original: "+moeda(preco)+"\nDesconto: "+desconto+"%\nEconomia: "+moeda(preco-final)+"\nPreço final: "+moeda(final));}
+function calcularParcela(total,quantidade){return total/quantidade;}
+function calculadoraParcelas(){const total=lerNumero("Valor total da compra (R$):");if(total===null)return;const quantidade=lerNumero("Quantidade de parcelas:");if(quantidade===null)return;if(!Number.isFinite(total)||total<=0||!Number.isInteger(quantidade)||quantidade<=0){alert("Informe valor positivo e quantidade inteira de parcelas maior que zero.");return;}alert("Total: "+moeda(total)+"\nParcelas: "+quantidade+"\nCada parcela: "+moeda(calcularParcela(total,quantidade))+"\nSem juros.");}
+function simularInvestimento(inicial,aporte,taxa,meses){let saldo=inicial,totalInvestido=inicial;for(let mes=1;mes<=meses;mes++){saldo*=1+taxa/100;saldo+=aporte;totalInvestido+=aporte;}return{saldoFinal:saldo,totalInvestido:totalInvestido,rendimento:saldo-totalInvestido};}
+function simuladorInvestimentos(){const inicial=lerNumero("Valor inicial (R$):");if(inicial===null)return;const aporte=lerNumero("Aporte mensal (R$):");if(aporte===null)return;const taxa=lerNumero("Taxa mensal (%):");if(taxa===null)return;const meses=lerNumero("Período em meses:");if(meses===null)return;if(![inicial,aporte,taxa,meses].every(Number.isFinite)||inicial<0||aporte<0||taxa<0||!Number.isInteger(meses)||meses<=0){alert("Valores e taxa devem ser não negativos; meses deve ser inteiro positivo.");return;}const r=simularInvestimento(inicial,aporte,taxa,meses);alert("SIMULADOR DE INVESTIMENTOS\nSaldo final: "+moeda(r.saldoFinal)+"\nTotal investido: "+moeda(r.totalInvestido)+"\nRendimento: "+moeda(r.rendimento));}
+
+// Entrega 2: array de despesas; cada item é um objeto {descricao, valor}.
+function dividirDespesasEntrega2(){
+ const despesas=[];
+ let continuar;
+ do{
+  const descricaoEntrada=prompt("Descrição da despesa (ex.: supermercado). Cancelar encerra a inclusão:");
+  if(descricaoEntrada===null)break;
+  const descricao=descricaoEntrada.trim();
+  if(descricao===""){alert("A descrição não pode ficar vazia.");continuar=true;continue;}
+  const valor=lerNumero("Valor da despesa '"+descricao+"' (R$):");
+  if(valor===null)break;
+  if(!Number.isFinite(valor)||valor<=0){alert("Informe um valor maior que zero.");continuar=true;continue;}
+  despesas.push({descricao:descricao,valor:valor});
+  continuar=confirm("Deseja cadastrar outra despesa?");
+ }while(continuar);
+ if(despesas.length===0){alert("Nenhuma despesa foi cadastrada.");return;}
+ const pessoas=lerNumero("Quantidade de pessoas para dividir as despesas:");
+ if(pessoas===null)return;
+ if(!Number.isInteger(pessoas)||pessoas<=0){alert("Informe uma quantidade inteira de pessoas maior que zero.");return;}
+ let total=0;let detalhes="DETALHAMENTO DAS DESPESAS\n";
+ despesas.forEach((despesa,indice)=>{total+=despesa.valor;detalhes+=(indice+1)+". "+despesa.descricao+": "+moeda(despesa.valor)+"\n";});
+ alert(detalhes+"\nTotal: "+moeda(total)+"\nPessoas: "+pessoas+"\nValor por pessoa: "+moeda(total/pessoas));
+}
